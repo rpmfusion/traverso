@@ -3,10 +3,13 @@
 %elseifarch ia64 x86_64
 %global with_sse 1
 %endif
+%ifnarch %{ix86} ia64 x86_64
+%global with_sse 0
+%endif
 
 Name:           traverso
 Version:        0.49.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Multitrack Audio Recording and Editing Suite
 Group:          Applications/Multimedia
 License:        GPLv2+
@@ -161,6 +164,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/mime/packages/*.xml
 
 %changelog
+* Wed May 06 2009 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 0.49.1-7
+- Explicitly disable SSE optimizations on non-"%%{ix86} ia64 x86_64" architectures
+
 * Wed May 06 2009 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 0.49.1-6
 - Re-enable portaudio
 
