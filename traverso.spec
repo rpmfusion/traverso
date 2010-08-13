@@ -1,15 +1,21 @@
+%global sse_cxxflags %{optflags}
+%global sse_cmakeflags -DHOST_SUPPORTS_SSE:BOOL=FALSE
 %ifarch %{ix86}
 %global with_sse %{!?_without_sse:1}%{?_without_sse:0}
-%elseifarch ia64 x86_64
-%global with_sse 1
+%if %{with_sse}
+%global sse_cxxflags -DSSE_OPTIMIZATIONS -DARCH_X86 %{optflags}
+%global sse_cmakeflags -DHOST_SUPPORTS_SSE:BOOL=TRUE -DIS_ARCH_X86:BOOL=TRUE
 %endif
-%ifnarch %{ix86} ia64 x86_64
-%global with_sse 0
+%endif
+%ifarch ia64 x86_64
+%global with_sse 1
+%global sse_cxxflags -DSSE_OPTIMIZATIONS -DUSE_XMMINTRIN -DARCH_X86 -DUSE_X86_64_ASM %{optflags}
+%global sse_cmakeflags -DHOST_SUPPORTS_SSE:BOOL=TRUE -DIS_ARCH_X86_64:BOOL=TRUE
 %endif
 
 Name:           traverso
-Version:        0.49.1
-Release:        7%{?dist}
+Version:        0.49.2
+Release:        1%{?dist}
 Summary:        Multitrack Audio Recording and Editing Suite
 Group:          Applications/Multimedia
 License:        GPLv2+
@@ -19,9 +25,8 @@ URL:            http://traverso-daw.org/
 Source0:        %{name}-%{version}.tar.gz
 # lower the rtprio requirement to 20, for compliance with our jack
 Patch0:         %{name}-priority.patch
-# For convenience with enabling sse optimizations
-# https://savannah.nongnu.org/bugs/index.php?26376
-Patch1:         %{name}-sseopt.patch
+# Fix DSO linking
+Patch1:         %{name}-linking.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  alsa-lib-devel
 BuildRequires:  cmake
@@ -67,16 +72,14 @@ playback are all perfectly safe, giving you instant feedback on your work!
 %prep
 %setup -q
 %patch0 -p1 -b .priority
-%patch1 -p1 -b .sseopt
+%patch1 -p1 -b .dso.linking
+
 
 # Fix permission issues
 chmod 644 ChangeLog TODO
 for ext in h cpp; do
    find . -name "*.$ext" -exec chmod 644 {} \;
 done
-
-# We want to build these from source
-rm -f resources/translations/*.qm
 
 # To match the freedesktop standards
 sed -i -e '\|^MimeType=.*[^;]$|s|$|;|' \
@@ -90,22 +93,14 @@ sed -i 's|libslv2|slv2|g' CMakeLists.txt
 
 
 %build
-# Build the translations
-pushd resources/translations
-   for lang in *.ts; do
-      lrelease-qt4 $lang
-   done
-popd
-
 # Build the actual program
 %{cmake}                                               \
          -DWANT_MP3_ENCODE=ON                          \
          -DUSE_SYSTEM_SLV2_LIBRARY=ON                  \
          -DDETECT_HOST_CPU_FEATURES=OFF                \
          -DWANT_PORTAUDIO=ON                           \
-%if %{with_sse}
-         -DWANT_SSE=ON                                 \
-%endif
+         -DCXX_FLAGS:STRING="%{sse_cxxflags}"          \
+         %{sse_cmakeflags}                             \
          .
 
 make %{?_smp_mflags} VERBOSE=1 
@@ -128,6 +123,8 @@ desktop-file-install                          \
    --dir %{buildroot}%{_datadir}/applications \
    --remove-mime-type=text/plain              \
    --add-mime-type=application/x-traverso     \
+   --add-category=X-Multitrack                \
+   --add-category=Sequencer                   \
    --remove-key=Path                          \
    resources/%{name}.desktop
 
@@ -164,6 +161,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/mime/packages/*.xml
 
 %changelog
+* Fri Aug 13 2010 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 0.49.2-1
+- Update to 0.49.2
+
 * Wed May 06 2009 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 0.49.1-7
 - Explicitly disable SSE optimizations on non-"%%{ix86} ia64 x86_64" architectures
 
