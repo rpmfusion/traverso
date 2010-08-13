@@ -25,6 +25,8 @@ URL:            http://traverso-daw.org/
 Source0:        %{name}-%{version}.tar.gz
 # lower the rtprio requirement to 20, for compliance with our jack
 Patch0:         %{name}-priority.patch
+# Fix DSO linking
+Patch1:         %{name}-linking.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  alsa-lib-devel
 BuildRequires:  cmake
@@ -70,6 +72,8 @@ playback are all perfectly safe, giving you instant feedback on your work!
 %prep
 %setup -q
 %patch0 -p1 -b .priority
+%patch1 -p1 -b .dso.linking
+
 
 # Fix permission issues
 chmod 644 ChangeLog TODO
