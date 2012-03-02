@@ -15,7 +15,7 @@
 
 Name:           traverso
 Version:        0.49.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Multitrack Audio Recording and Editing Suite
 Group:          Applications/Multimedia
 License:        GPLv2+
@@ -161,6 +161,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/mime/packages/*.xml
 
 %changelog
+* Fri Mar 02 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.49.2-4
+- Rebuilt for c++ ABI breakage
+
 * Wed Feb 08 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.49.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
