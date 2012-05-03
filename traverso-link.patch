@@ -1,0 +1,36 @@
+diff -up traverso-0.49.2/src/plugins/CMakeLists.txt.link traverso-0.49.2/src/plugins/CMakeLists.txt
+--- traverso-0.49.2/src/plugins/CMakeLists.txt.link	2009-03-28 09:48:39.000000000 +0100
++++ traverso-0.49.2/src/plugins/CMakeLists.txt	2012-05-04 00:18:03.734512187 +0200
+@@ -6,6 +6,8 @@ ${CMAKE_SOURCE_DIR}/src/commands
+ ${CMAKE_SOURCE_DIR}/src/plugins/native
+ ${CMAKE_SOURCE_DIR}/src/plugins/LV2
+ ${QT_QTXML_INCLUDE_DIR}
++/usr/include/raptor2
++/usr/include/rasqal
+ )
+ 
+ IF(USE_INTERNAL_SLV2_LIB)
+diff -up traverso-0.49.2/src/sheetcanvas/CMakeLists.txt.link traverso-0.49.2/src/sheetcanvas/CMakeLists.txt
+--- traverso-0.49.2/src/sheetcanvas/CMakeLists.txt.link	2009-03-28 09:48:39.000000000 +0100
++++ traverso-0.49.2/src/sheetcanvas/CMakeLists.txt	2012-05-04 00:21:26.842273593 +0200
+@@ -11,6 +11,8 @@ ${CMAKE_SOURCE_DIR}/src/traverso
+ ${CMAKE_SOURCE_DIR}/src/traverso/dialogs
+ ${QT_QTGUI_INCLUDE_DIR}
+ ${QT_QTXML_INCLUDE_DIR}
++/usr/include/raptor2
++/usr/include/rasqal
+ )
+ 
+ # IF(HAVE_OPENGL)
+diff -up traverso-0.49.2/src/traverso/CMakeLists.txt.link traverso-0.49.2/src/traverso/CMakeLists.txt
+--- traverso-0.49.2/src/traverso/CMakeLists.txt.link	2009-03-28 09:48:39.000000000 +0100
++++ traverso-0.49.2/src/traverso/CMakeLists.txt	2012-05-04 00:25:14.675893528 +0200
+@@ -11,6 +11,8 @@ ${CMAKE_SOURCE_DIR}/src/plugins/native
+ ${CMAKE_SOURCE_DIR}/src/sheetcanvas
+ ${QT_QTGUI_INCLUDE_DIR}
+ ${QT_QTXML_INCLUDE_DIR}
++/usr/include/raptor2
++/usr/include/rasqal
+ )
+ 
+ IF(USE_INTERNAL_SLV2_LIB)
