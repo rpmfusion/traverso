@@ -15,7 +15,7 @@
 
 Name:           traverso
 Version:        0.49.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Multitrack Audio Recording and Editing Suite
 Group:          Applications/Multimedia
 License:        GPLv2+
@@ -27,6 +27,8 @@ Source0:        %{name}-%{version}.tar.gz
 Patch0:         %{name}-priority.patch
 # Fix DSO linking
 Patch1:         %{name}-linking.patch
+Patch2:         traverso-gcc47.patch
+Patch3:         traverso-link.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  alsa-lib-devel
 BuildRequires:  cmake
@@ -73,6 +75,8 @@ playback are all perfectly safe, giving you instant feedback on your work!
 %setup -q
 %patch0 -p1 -b .priority
 %patch1 -p1 -b .dso.linking
+%patch2 -p1 -b .gcc47
+%patch3 -p1 -b .link
 
 
 # Fix permission issues
@@ -161,6 +165,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/mime/packages/*.xml
 
 %changelog
+* Thu May 03 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.49.2-5
+- Fix for gcc47 and missing cflags
+
 * Fri Mar 02 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.49.2-4
 - Rebuilt for c++ ABI breakage
 

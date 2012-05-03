@@ -1,0 +1,23 @@
+diff -up traverso-0.49.2/src/core/FileHelpers.cpp.gcc47 traverso-0.49.2/src/core/FileHelpers.cpp
+--- traverso-0.49.2/src/core/FileHelpers.cpp.gcc47	2009-03-28 09:48:39.000000000 +0100
++++ traverso-0.49.2/src/core/FileHelpers.cpp	2012-05-04 00:18:03.732512179 +0200
+@@ -31,6 +31,8 @@ $Id: FileHelpers.cpp,v 1.10 2007/11/05 1
+ 
+ #include "Debugger.h"
+ 
++#include <unistd.h> // read,write
++
+ // delete file/dir pName after prepending $HOME/traversoprojects/ to it
+ //
+ // if it is a directory, calls itself recursively  on any file/dir in the directory
+diff -up traverso-0.49.2/src/traverso/Main.cpp.gcc47 traverso-0.49.2/src/traverso/Main.cpp
+--- traverso-0.49.2/src/traverso/Main.cpp.gcc47	2009-03-28 09:48:39.000000000 +0100
++++ traverso-0.49.2/src/traverso/Main.cpp	2012-05-04 00:23:34.002666113 +0200
+@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin St, Fifth
+ #include "Main.h"
+ #include "../config.h"
+ #include <cstdlib>
++#include <unistd.h> // getpgrp
+ 
+ // Always put me below _all_ includes, this is needed
+ // in case we run with memory leak detection enabled!
