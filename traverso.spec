@@ -15,7 +15,7 @@
 
 Name:           traverso
 Version:        0.49.2
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Multitrack Audio Recording and Editing Suite
 Group:          Applications/Multimedia
 License:        GPLv2+
@@ -165,6 +165,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/mime/packages/*.xml
 
 %changelog
+* Sun Mar 03 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.49.2-6
+- Mass rebuilt for Fedora 19 Features
+
 * Thu May 03 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.49.2-5
 - Fix for gcc47 and missing cflags
 
