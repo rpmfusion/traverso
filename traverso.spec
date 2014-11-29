@@ -14,8 +14,8 @@
 %endif
 
 Name:           traverso
-Version:        0.49.2
-Release:        7%{?dist}
+Version:        0.49.3
+Release:        1%{?dist}
 Summary:        Multitrack Audio Recording and Editing Suite
 Group:          Applications/Multimedia
 License:        GPLv2+
@@ -26,10 +26,7 @@ Source0:        %{name}-%{version}.tar.gz
 # lower the rtprio requirement to 20, for compliance with our jack
 Patch0:         %{name}-priority.patch
 # Fix DSO linking
-Patch1:         %{name}-linking.patch
-Patch2:         traverso-gcc47.patch
-Patch3:         traverso-link.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Patch1:         traverso-gcc49.patch
 BuildRequires:  alsa-lib-devel
 BuildRequires:  cmake
 BuildRequires:  desktop-file-utils
@@ -37,6 +34,7 @@ BuildRequires:  fftw-devel
 BuildRequires:  flac-devel
 BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  lame-devel
+BuildRequires:  lilv-devel
 BuildRequires:  libmad-devel
 BuildRequires:  libogg-devel
 BuildRequires:  libsamplerate-devel
@@ -48,7 +46,6 @@ BuildRequires:  portaudio-devel
 BuildRequires:  qt-devel
 BuildRequires:  raptor-devel
 BuildRequires:  redland-devel
-BuildRequires:  slv2-devel >= 0.6.1
 BuildRequires:  wavpack-devel
 
 # For directory ownership:
@@ -74,9 +71,7 @@ playback are all perfectly safe, giving you instant feedback on your work!
 %prep
 %setup -q
 %patch0 -p1 -b .priority
-%patch1 -p1 -b .dso.linking
-%patch2 -p1 -b .gcc47
-%patch3 -p1 -b .link
+%patch1 -p1 -b .gcc49
 
 
 # Fix permission issues
@@ -114,7 +109,6 @@ echo "Comment=Digital Audio Workstation" >> resources/%{name}.desktop
 
 
 %install
-rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} 
 
 # icons
@@ -136,9 +130,6 @@ desktop-file-install                          \
 install -dm 755 %{buildroot}%{_datadir}/mime/packages/
 install -pm 644 resources/x-%{name}.xml %{buildroot}%{_datadir}/mime/packages/
 
-%clean
-rm -rf %{buildroot}
-
 %post
 update-desktop-database &> /dev/null
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null
@@ -156,7 +147,6 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING COPYRIGHT HISTORY README TODO
 %doc resources/projectconversion/2_to_3.html resources/help.text
 %{_bindir}/%{name}
@@ -165,6 +155,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/mime/packages/*.xml
 
 %changelog
+* Fri Nov 28 2014 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 0.49.3-1
+- Update to 0.49.3
+
 * Sun Aug 31 2014 Sérgio Basto <sergio@serjux.com> - 0.49.2-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
