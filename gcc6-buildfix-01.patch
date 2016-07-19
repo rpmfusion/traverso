@@ -1,0 +1,34 @@
+--- a/src/common/Tsar.h
++++ b/src/common/Tsar.h
+@@ -62,8 +62,7 @@
+ // used for slot invokation stuff
+ 	QObject* 	caller;
+ 	void*		argument;
+-	int		slotindex;
+-	void*		_a[];
++	int		slotindex;
+ 
+ // Used for the signal emiting stuff
+ 	int signalindex;
+
+ 
+--- a/src/plugins/LV2/LV2Plugin.cpp
++++ b/src/plugins/LV2/LV2Plugin.cpp
+@@ -26,6 +26,7 @@
+ #include <AudioBus.h>
+ #include <AudioDevice.h>
+ #include <Utils.h>
++#include <cmath>
+ 
+ #if defined Q_WS_MAC
+ 	#include <cmath>
+@@ -314,7 +315,7 @@
+ 		case CONTROL:
+ 			switch (direction) {
+ 			case INPUT:
+-				defaultValue = isnan(defaultValue) ? 0.0 : defaultValue;
++				defaultValue = std::isnan(defaultValue) ? 0.0 : defaultValue;
+ 				ctrlport = new LV2ControlPort(this, portIndex, defaultValue);
+ 				break;
+ 			case OUTPUT:
+

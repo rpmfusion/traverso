@@ -15,7 +15,7 @@
 
 Name:           traverso
 Version:        0.49.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Multitrack Audio Recording and Editing Suite
 Group:          Applications/Multimedia
 License:        GPLv2+
@@ -27,6 +27,7 @@ Source0:        %{name}-%{version}.tar.gz
 Patch0:         %{name}-priority.patch
 # Fix DSO linking
 Patch1:         traverso-gcc49.patch
+Patch2:         gcc6-buildfix-01.patch
 BuildRequires:  alsa-lib-devel
 BuildRequires:  cmake
 BuildRequires:  desktop-file-utils
@@ -72,6 +73,7 @@ playback are all perfectly safe, giving you instant feedback on your work!
 %setup -q
 %patch0 -p1 -b .priority
 %patch1 -p1 -b .gcc49
+%patch2 -p1 -b .gcc6
 
 
 # Fix permission issues
@@ -155,6 +157,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/mime/packages/*.xml
 
 %changelog
+* Tue Jul 19 2016 Leigh Scott <leigh123linux@googlemail.com> - 0.49.3-2
+- patch for gcc-6
+
 * Fri Nov 28 2014 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 0.49.3-1
 - Update to 0.49.3
 
