@@ -15,7 +15,7 @@
 
 Name:           traverso
 Version:        0.49.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Multitrack Audio Recording and Editing Suite
 Group:          Applications/Multimedia
 License:        GPLv2+
@@ -157,6 +157,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/mime/packages/*.xml
 
 %changelog
+* Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.49.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Mon Mar 20 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.49.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
