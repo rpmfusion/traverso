@@ -14,20 +14,20 @@
 %endif
 
 Name:           traverso
-Version:        0.49.3
-Release:        7%{?dist}
+Version:        0.49.5
+Release:        1%{?dist}
 Summary:        Multitrack Audio Recording and Editing Suite
-Group:          Applications/Multimedia
+
 License:        GPLv2+
 URL:            http://traverso-daw.org/
-# Source0 actually is http://traverso-daw.org/download.html&d=%{name}-%{version}.tar.gz
-# but rpmbuild doesn't work with this kind of URL's. So
-Source0:        %{name}-%{version}.tar.gz
+Source0:        http://traverso-daw.org/%{name}-%{version}.tar.gz
 # lower the rtprio requirement to 20, for compliance with our jack
 Patch0:         %{name}-priority.patch
 # Fix DSO linking
 Patch1:         traverso-gcc49.patch
-Patch2:         gcc6-buildfix-01.patch
+# Patch2:         gcc6-buildfix-01.patch
+
+BuildRequires:  gcc-c++
 BuildRequires:  alsa-lib-devel
 BuildRequires:  cmake
 BuildRequires:  desktop-file-utils
@@ -44,7 +44,10 @@ BuildRequires:  libvorbis-devel
 BuildRequires:  portaudio-devel
 # Native pulseaudio is not supported yet.
 #BuildRequires:  pulseaudio-libs-devel
-BuildRequires:  qt-devel
+BuildRequires:  cmake(Qt5Core)
+BuildRequires:  cmake(Qt5Widgets)
+BuildRequires:  cmake(Qt5Gui)
+BuildRequires:  cmake(Qt5Xml)
 BuildRequires:  raptor-devel
 BuildRequires:  redland-devel
 BuildRequires:  wavpack-devel
@@ -70,10 +73,7 @@ removal of effects plugins, moving Audio Clips and creating new Tracks during
 playback are all perfectly safe, giving you instant feedback on your work! 
 
 %prep
-%setup -q
-%patch0 -p1 -b .priority
-%patch1 -p1 -b .gcc49
-%patch2 -p1 -b .gcc6
+%autosetup -p1
 
 
 # Fix permission issues
@@ -104,14 +104,14 @@ sed -i 's|libslv2|slv2|g' CMakeLists.txt
          %{sse_cmakeflags}                             \
          .
 
-make %{?_smp_mflags} VERBOSE=1 
+%make_build VERBOSE=1
 
 # Add Comment to the .desktop file
 echo "Comment=Digital Audio Workstation" >> resources/%{name}.desktop
 
 
 %install
-make install DESTDIR=%{buildroot} 
+%make_install
 
 # icons
 install -dm 755 %{buildroot}%{_datadir}/icons/hicolor/
@@ -132,24 +132,10 @@ desktop-file-install                          \
 install -dm 755 %{buildroot}%{_datadir}/mime/packages/
 install -pm 644 resources/x-%{name}.xml %{buildroot}%{_datadir}/mime/packages/
 
-%post
-update-desktop-database &> /dev/null
-touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-update-mime-database %{_datadir}/mime &> /dev/null || :
-
-%postun
-update-desktop-database &> /dev/null
-if [ $1 -eq 0 ] ; then
-    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null
-fi
-update-mime-database %{_datadir}/mime &> /dev/null || :
-
-%posttrans
-gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
-%doc AUTHORS ChangeLog COPYING COPYRIGHT HISTORY README TODO
+%license COPYING
+%doc AUTHORS ChangeLog COPYRIGHT HISTORY README TODO
 %doc resources/projectconversion/2_to_3.html resources/help.text
 %{_bindir}/%{name}
 %{_datadir}/icons/hicolor/*/*/*
@@ -157,6 +143,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/mime/packages/*.xml
 
 %changelog
+* Tue Oct 23 2018 Vasiliy N. Glazov <vascom2@gmail.com> - 0.49.5-1
+- Update to 0.49.5
+- Switch to Qt5
+
 * Sun Aug 19 2018 Leigh Scott <leigh123linux@googlemail.com> - 0.49.3-7
 - Rebuilt for Fedora 29 Mass Rebuild binutils issue
 
